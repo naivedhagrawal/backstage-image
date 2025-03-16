@@ -28,11 +28,16 @@ spec:
         stage('Setup Environment') {
             steps {
                 container('build-container') {
-                    sh "dnf update -y && dnf install -y docker curl bash git jq wget"
+                    sh "dnf install -y docker curl bash git jq wget"
                     sh "curl -fsSL https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.4/install.sh | bash"
-                    sh "export NVM_DIR=\"$HOME/.nvm\" && . \"$NVM_DIR/nvm.sh\" && nvm install lts/iron && nvm use lts/iron"
-                    sh "corepack enable"  // Enable Corepack to manage Yarn
-                    sh "yarn set version 4.4.1"  // Set a specific Yarn version
+                    sh '''
+                    export NVM_DIR="$HOME/.nvm"
+                    [ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"
+                    nvm install lts/iron
+                    nvm use lts/iron
+                    corepack enable
+                    yarn set version 4.4.1
+                    '''
                 }
             }
         }
