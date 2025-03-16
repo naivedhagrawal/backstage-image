@@ -40,8 +40,9 @@ spec:
                 container('node') {
                     dir("${BACKSTAGE_APP}") {
                         sh 'yarn explain peer-requirements'
-                        sh 'yarn add @types/react@18 @testing-library/react@16.14.0 react@17.0.2 react-dom@17.0.2 --exact'
-                        sh 'yarn install --immutable --check-cache'
+                        sh 'yarn dedupe'
+                        sh 'yarn add @types/react@18 @testing-library/react@16.14.0 react@17.0.2 react-dom@17.0.2 --exact --force'
+                        sh 'yarn install --mode update-lockfile'
                     }
                 }
             }
