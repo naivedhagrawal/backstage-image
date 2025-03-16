@@ -6,8 +6,10 @@ apiVersion: v1
 kind: Pod
 spec:
   containers:
+  - name: jnlp
+    image: jenkins/inbound-agent:latest
   - name: node
-    image: node:20
+    image: node:18
     command: ["cat"]
     tty: true
   - name: docker
@@ -27,7 +29,8 @@ spec:
         stage('Create Backstage App') {
             steps {
                 container('node') {
-                    sh "npx @backstage/create-app@latest --yes --path=${BACKSTAGE_APP}"
+                    sh "npm install -g @backstage/create-app"
+                    sh "npx @backstage/create-app@latest --path=${BACKSTAGE_APP}"
                 }
             }
         }
