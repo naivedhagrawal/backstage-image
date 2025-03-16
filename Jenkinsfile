@@ -2,7 +2,7 @@
 pipeline {
     agent {
             kubernetes {
-                yaml pod('build-container','alpine:latest')
+                yaml pod('build-container','node:20-alpine')
                 showRawYaml false
             }
         }
@@ -19,14 +19,6 @@ pipeline {
                     sh '''
                     apk add --no-cache build-base
                     apk add --no-cache linux-headers
-                    apk add --no-cache python3 py3-pip
-                    apk add --no-cache curl bash git jq wget
-                    curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.2/install.sh | bash
-                    . "$HOME/.nvm/nvm.sh"
-                    nvm install 23
-                    node -v
-                    nvm current
-                    npm -v
                     npm install -g corepack
                     corepack enable
                     yarn init -2
