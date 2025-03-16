@@ -33,6 +33,7 @@ pipeline {
             steps {
                 container('build-container') {
                     sh '''
+                    npm install -g @backstage/create-app
                     echo 'backstage' | npx @backstage/create-app@latest --path=${BACKSTAGE_APP}
                     '''
                 }
