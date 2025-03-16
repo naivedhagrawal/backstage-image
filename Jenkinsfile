@@ -21,12 +21,12 @@ pipeline {
                     apk add --no-cache linux-headers
                     npm install -g corepack
                     corepack enable
-                    yarn init -2
                     yarn set version stable
-                    yarn install
+                    yarn tsc
+                    yarn install --immutable
                     apk add --update docker openrc
-                    run rc-update add docker boot
-                    run service docker start
+                    rc-update add docker boot
+                    service docker start
                     '''
                 }
             }
