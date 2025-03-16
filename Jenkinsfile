@@ -39,7 +39,8 @@ spec:
             steps {
                 container('node') {
                     dir("${BACKSTAGE_APP}") {
-                        sh 'yarn install --skip-integrity-check'
+                        sh 'yarn install --mode update-lockfile || true'
+                        sh 'yarn add react@17.x react-dom@17.x @testing-library/react@16.x --exact'
                     }
                 }
             }
