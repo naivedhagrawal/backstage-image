@@ -14,6 +14,8 @@ pipeline {
                     sh '''
                         apk add --no-cache build-base make curl wget git bash
                         wget -qO- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.2/install.sh | bash
+                        export NVM_DIR="$HOME/.nvm"
+                        [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
                         nvm install lts/iron
                     '''
                 }
