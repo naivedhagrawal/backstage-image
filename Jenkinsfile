@@ -17,7 +17,7 @@ pipeline {
             steps {
                 container('build-container') {
                     sh '''
-                        # Install necessary tools
+                        # Install tools and dependencies
                         apk add --no-cache build-base linux-headers docker openrc
                         npm install -g corepack @backstage/create-app
                         corepack enable
@@ -31,8 +31,10 @@ pipeline {
             steps {
                 container('build-container') {
                     sh '''
-                        # Avoid app name prompt by pre-assigning the name
-                        echo "backstage" | npx @backstage/create-app@latest --path=${BACKSTAGE_APP} --no-git --skip-install
+                        # Initialize Backstage app
+                        echo "backstage" | npx @backstage/create-app@latest --path=${BACKSTAGE_APP} --skip-install
+                        # Optionally remove Git initialization
+                        rm -rf ${BACKSTAGE_APP}/.git
                     '''
                 }
             }
@@ -43,7 +45,7 @@ pipeline {
                 container('build-container') {
                     dir("${BACKSTAGE_APP}") {
                         sh '''
-                            # Resolve dependency conflicts and install necessary packages
+                            # Resolve peer dependency conflicts
                             rm yarn.lock || true
                             yarn install --mode update-lockfile
                             yarn add react@17.0.2 react-dom@17.0.2 @testing-library/react@16.14.0 --exact
@@ -59,7 +61,7 @@ pipeline {
                 container('build-container') {
                     dir("${BACKSTAGE_APP}") {
                         sh '''
-                            # Build the frontend and backend
+                            # Build the app
                             yarn tsc
                             yarn build
                             yarn build:backend --config app-config.production.yaml
