@@ -40,8 +40,8 @@ spec:
                 container('node') {
                     dir("${BACKSTAGE_APP}") {
                         sh 'corepack enable'  // Enable Corepack to manage Yarn
-                        sh 'yarn set version stable'  // Ensure a stable version of Yarn
-                        sh 'rm -f yarn.lock && yarn install --immutable'  // Strict dependency resolution with lockfile cleanup
+                        sh 'yarn set version 4.4.1'  // Set a specific Yarn version
+                        sh 'rm -f yarn.lock && yarn install --immutable --check-cache'  // Ensure strict dependency resolution
                     }
                 }
             }
