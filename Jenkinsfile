@@ -9,7 +9,7 @@ spec:
   - name: jnlp
     image: jenkins/inbound-agent:latest
   - name: node
-    image: node:18
+    image: node:23.10
     command: ["cat"]
     tty: true
   - name: docker
