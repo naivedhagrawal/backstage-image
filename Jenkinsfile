@@ -28,14 +28,13 @@ spec:
         stage('Setup Environment') {
             steps {
                 container('build-container') {
-                    sh "apk add --no-cache curl bash git jq wget docker-cli"
+                    sh "apk add --no-cache curl bash git jq wget docker-cli nodejs npm"
                     sh "curl -fsSL https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.4/install.sh | bash"
                     sh '''
                     export NVM_DIR="$HOME/.nvm"
                     [ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"
                     nvm install lts/iron
                     nvm use lts/iron
-                    corepack enable
                     yarn set version 4.4.1
                     npm install -g npm  # Ensure npm is installed globally
                     '''
@@ -60,7 +59,6 @@ spec:
             steps {
                 container('build-container') {
                     dir("${BACKSTAGE_APP}") {
-                        sh 'corepack enable'  // Enable Corepack to manage Yarn
                         sh 'yarn set version 4.4.1'  // Set a specific Yarn version
                         sh 'yarn add react@18.2.0 react-dom@18.2.0 @testing-library/react@16.0.0 @types/react'
                         sh 'yarn install --mode=update-lockfile --check-cache'  // Allow updates while ensuring consistency
