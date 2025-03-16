@@ -18,12 +18,12 @@ pipeline {
                 container('build-container') {
                     sh '''
                         # Install necessary tools, including Python
-                        apk add --no-cache build-base linux-headers docker openrc python3 python3-dev py3-pip
+                        apk add --no-cache build-base linux-headers python3 python3-dev py3-pip docker openrc
                         ln -sf python3 /usr/bin/python
                         npm install -g corepack @backstage/create-app
                         corepack enable
                         yarn set version 4.4.1
-                        rm -f /home/jenkins/agent/workspace/backstage-image/{yarn.lock,package.json}
+                        rm -f /home/jenkins/agent/workspace/backstage-image/yarn.lock
                     '''
                 }
             }
@@ -35,8 +35,10 @@ pipeline {
                     sh '''
                         # Initialize Backstage app
                         echo "backstage" | npx @backstage/create-app@latest --path=${BACKSTAGE_APP} --skip-install
-                        # Optionally remove Git initialization
+                        # Remove Git initialization
                         rm -rf ${BACKSTAGE_APP}/.git
+                        # Ensure the app is treated as an independent project
+                        touch ${BACKSTAGE_APP}/yarn.lock
                     '''
                 }
             }
@@ -47,13 +49,11 @@ pipeline {
                 container('build-container') {
                     dir("${BACKSTAGE_APP}") {
                         sh '''
-                            # Ensure the app is treated as an independent project
-                            touch yarn.lock
-                            yarn install --mode update-lockfile
-
                             # Install compatible dependencies
-                            yarn add react@17.0.2 react-dom@17.0.2 @testing-library/react --exact
+                            yarn install --mode update-lockfile
+                            yarn add react@18.0.2 react-dom@18.0.2
                             yarn add @types/react --dev
+                            yarn add @testing-library/dom
                         '''
                     }
                 }
@@ -65,22 +65,19 @@ pipeline {
                 container('build-container') {
                     dir("${BACKSTAGE_APP}") {
                         sh '''
-                            # Ensure the build script exists in package.json
+                            # Add build script if not present
                             if ! grep -q '"build":' package.json; then
-                                echo 'Adding build script to package.json'
-                                echo '{"scripts": {"build": "yarn workspace backend build && yarn workspace frontend build"}}' > package.json
+                                jq '.scripts.build = "yarn tsc && yarn build:backend --config app-config.production.yaml"' package.json > package.json.tmp
+                                mv package.json.tmp package.json
                             fi
-
                             # Run build
                             yarn tsc
                             yarn build
-                            yarn build:backend --config app-config.production.yaml
                         '''
                     }
                 }
             }
         }
-
 
         stage('Build Docker Image') {
             steps {
