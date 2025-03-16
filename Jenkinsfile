@@ -32,7 +32,7 @@ spec:
                     apk add --no-cache curl bash git jq wget
                     curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.2/install.sh | bash
                     . "$HOME/.nvm/nvm.sh"
-                    nvm install 22
+                    nvm install 23
                     node -v
                     nvm current
                     npm -v
@@ -41,12 +41,9 @@ spec:
                     yarn init -2
                     yarn set version stable
                     yarn install
-                    apk add docker
-                    rc-update add docker default
-                    service docker start
-                    USER=$(whoami)
-                    addgroup ${USER} docker
-                    apk add git
+                    apk add --update docker openrc
+                    run rc-update add docker boot
+                    run service docker start
                     '''
                 }
             }
