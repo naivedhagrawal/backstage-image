@@ -50,13 +50,16 @@ pipeline {
                             # Ensure the app is treated as an independent project
                             touch yarn.lock
                             yarn install --mode update-lockfile
-                            yarn add react@17.0.2 react-dom@17.0.2 @testing-library/react@16.14.0 --exact
+
+                            # Install compatible dependencies
+                            yarn add react@17.0.2 react-dom@17.0.2 @testing-library/react --exact
                             yarn add @types/react --dev
                         '''
                     }
                 }
             }
         }
+
 
         stage('Build Backstage') {
             steps {
