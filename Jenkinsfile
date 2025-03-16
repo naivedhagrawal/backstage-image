@@ -62,8 +62,8 @@ spec:
                     dir("${BACKSTAGE_APP}") {
                         sh 'corepack enable'  // Enable Corepack to manage Yarn
                         sh 'yarn set version 4.4.1'  // Set a specific Yarn version
-                        sh "jq '.dependencies.react=\"18.3.1\" | .dependencies.\"react-dom\"=\"18.3.1\" | .dependencies.\"@testing-library/react\"=\"16.0.0\"' package.json > temp.json && mv temp.json package.json"
-                        sh 'rm -f yarn.lock && yarn install --check-cache'  // Allow updates while ensuring consistency
+                        sh 'yarn add react@18.2.0 react-dom@18.2.0 @testing-library/react@16.0.0'
+                        sh 'rm -f yarn.lock && yarn install --mode=update-lockfile'  // Allow updates while ensuring consistency
                     }
                 }
             }
