@@ -40,7 +40,7 @@ spec:
                 container('node') {
                     dir("${BACKSTAGE_APP}") {
                         sh 'yarn install --mode update-lockfile || true'
-                        sh 'yarn add react@16.14.0 react-dom@16.14.0 @testing-library/react@16.14.0 --exact'
+                        sh 'yarn add react@17.0.2 react-dom@17.0.2 @testing-library/react@16.14.0 --exact'
                     }
                 }
             }
