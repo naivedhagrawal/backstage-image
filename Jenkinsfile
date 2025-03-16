@@ -24,7 +24,7 @@ pipeline {
                     yarn set version 4.4.1
                     yarn install --mode update-lockfile || (rm yarn.lock && yarn install)
                     apk add --update docker openrc
-                    rc-update add docker boot
+                    service docker start
                     '''
                 }
             }
@@ -35,7 +35,7 @@ pipeline {
                 container('build-container') {
                     sh '''
                     npm install -g @backstage/create-app
-                    echo '${BACKSTAGE_APP}\n' | npx @backstage/create-app@latest --path=${BACKSTAGE_APP}
+                    echo 'backstage' | npx @backstage/create-app@latest --path=${BACKSTAGE_APP}
                     '''
                 }
             }
@@ -45,9 +45,10 @@ pipeline {
             steps {
                 container('build-container') {
                     dir("${BACKSTAGE_APP}") {
-                        sh 'yarn set version 4.4.1'
-                        sh 'yarn tsc'
-                        sh 'yarn install --immutable'
+                        sh '''
+                            yarn install --mode update-lockfile
+                            yarn add react@17.0.2 react-dom@17.0.2 @testing-library/react@16.14.0 --exact
+                        '''
                     }
                 }
             }
