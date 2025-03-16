@@ -22,6 +22,8 @@ pipeline {
                         npm install -g corepack @backstage/create-app
                         corepack enable
                         yarn set version 4.4.1
+                        # Clean up root directory misconfigurations
+                        rm -f /home/jenkins/agent/workspace/backstage-image/{yarn.lock,package.json}
                     '''
                 }
             }
@@ -45,8 +47,8 @@ pipeline {
                 container('build-container') {
                     dir("${BACKSTAGE_APP}") {
                         sh '''
-                            # Resolve peer dependency conflicts
-                            rm yarn.lock || true
+                            # Ensure the app is treated as an independent project
+                            touch yarn.lock
                             yarn install --mode update-lockfile
                             yarn add react@17.0.2 react-dom@17.0.2 @testing-library/react@16.14.0 --exact
                             yarn add @types/react --dev
