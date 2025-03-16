@@ -39,7 +39,7 @@ spec:
             steps {
                 container('node') {
                     dir("${BACKSTAGE_APP}") {
-                        sh 'yarn install --frozen-lockfile'
+                        sh 'yarn install --skip-integrity-check'
                     }
                 }
             }
