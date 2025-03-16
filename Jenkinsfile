@@ -28,7 +28,7 @@ spec:
         stage('Setup Environment') {
             steps {
                 container('build-container') {
-                    sh "apk add --no-cache nodejs npm docker-cli curl bash git"
+                    sh "apk add --no-cache nodejs npm docker-cli curl bash git corepack"
                     sh "corepack enable"  // Enable Corepack to manage Yarn
                     sh "curl -fsSL https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.4/install.sh | bash"
                     sh "export NVM_DIR=\"$HOME/.nvm\" && [ -s \"$NVM_DIR/nvm.sh\" ] && \\\n                       . \"$NVM_DIR/nvm.sh\" && nvm install --lts && nvm use --lts"
