@@ -31,7 +31,7 @@ spec:
                     sh '''
                     apk add --no-cache curl bash git jq wget
                     curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.2/install.sh | bash
-                    \. "$HOME/.nvm/nvm.sh"
+                    . "$HOME/.nvm/nvm.sh"
                     nvm install 22
                     node -v
                     nvm current
@@ -44,6 +44,7 @@ spec:
                     apk add docker
                     rc-update add docker default
                     service docker start
+                    USER=$(whoami)
                     addgroup ${USER} docker
                     apk add git
                     '''
