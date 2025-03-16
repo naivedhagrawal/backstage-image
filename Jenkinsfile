@@ -22,8 +22,7 @@ pipeline {
                     npm install -g corepack
                     corepack enable
                     yarn set version 4.4.1
-                    yarn install
-                    yarn install --immutable
+                    yarn install --mode update-lockfile || (rm yarn.lock && yarn install)
                     yarn tsc
                     yarn build:backend
                     apk add --update docker openrc
