@@ -23,6 +23,7 @@ pipeline {
                     corepack enable
                     yarn set version 4.4.1
                     yarn install
+                    yarn install --immutable
                     yarn tsc
                     yarn build:backend
                     apk add --update docker openrc
