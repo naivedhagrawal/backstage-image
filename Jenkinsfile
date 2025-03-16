@@ -53,8 +53,8 @@ spec:
             steps {
                 container('build-container') {
                     dir("${BACKSTAGE_APP}") {
-                        sh 'yarn set version stable'  # Use latest stable Yarn
-                        sh 'yarn install --immutable'  # Ensure lockfile consistency
+                        sh 'yarn set version stable'
+                        sh 'yarn install --immutable'
                     }
                 }
             }
@@ -64,7 +64,7 @@ spec:
             steps {
                 container('build-container') {
                     dir("${BACKSTAGE_APP}") {
-                        sh 'yarn backstage-cli versions:bump'  # Keep Backstage up to date
+                        sh 'yarn backstage-cli versions:bump'
                     }
                 }
             }
