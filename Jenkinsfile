@@ -21,6 +21,7 @@ pipeline {
                     apk add --no-cache linux-headers
                     npm install -g corepack
                     corepack enable
+                    yarn init -2
                     yarn set version 4.4.1
                     yarn install
                     yarn tsc
