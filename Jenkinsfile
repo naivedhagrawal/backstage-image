@@ -39,9 +39,9 @@ spec:
             steps {
                 container('node') {
                     dir("${BACKSTAGE_APP}") {
-                        sh 'yarn explain peer-requirements'
-                        sh 'yarn add @types/react@18 @testing-library/react@16.14.0 react@17.0.2 react-dom@17.0.2 --exact --force'
-                        sh 'yarn install --mode update-lockfile'
+                        sh 'corepack enable'  // Enable Corepack to manage Yarn
+                        sh 'yarn set version stable'  // Ensure a stable version of Yarn
+                        sh 'yarn install --immutable'  // Strict dependency resolution
                     }
                 }
             }
