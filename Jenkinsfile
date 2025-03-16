@@ -31,6 +31,7 @@ spec:
             steps {
                 container('node') {
                     sh "npm install -g @backstage/create-app@latest"
+                    sh 'export PATH="$PATH:/root/.npm-global/bin"' // Add the global bin directory to PATH
                     sh "backstage-cli create-app --path=${BACKSTAGE_APP} --yes --scope ${BACKSTAGE_SCOPE}"
                 }
             }
