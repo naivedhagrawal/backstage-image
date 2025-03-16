@@ -29,11 +29,23 @@ spec:
             steps {
                 container('build-container') {
                     sh '''
-                    apk add --no-cache curl bash git jq wget docker-cli nodejs npm
+                    apk add --no-cache curl bash git jq wget
+                    curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.2/install.sh | bash
+                    \. "$HOME/.nvm/nvm.sh"
+                    nvm install 22
+                    node -v
+                    nvm current
+                    npm -v
                     npm install -g corepack
                     corepack enable
-                    corepack prepare yarn@stable --activate
-                    npm install -g npm  # Ensure latest npm is installed
+                    yarn init -2
+                    yarn set version stable
+                    yarn install
+                    apk add docker
+                    rc-update add docker default
+                    service docker start
+                    addgroup ${USER} docker
+                    apk add git
                     '''
                 }
             }
