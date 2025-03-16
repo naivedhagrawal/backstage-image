@@ -21,8 +21,8 @@ pipeline {
                     apk add --no-cache linux-headers
                     npm install -g corepack
                     corepack enable
-                    yarn install
                     yarn set version 4.4.1
+                    yarn install
                     yarn tsc
                     yarn build:backend
                     apk add --update docker openrc
