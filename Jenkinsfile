@@ -17,6 +17,7 @@ pipeline {
             steps {
                 container('build-container') {
                     sh '''
+                    apk add --no-cache build-base
                     apk add --no-cache curl bash git jq wget python3 py3-pip
                     curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.2/install.sh | bash
                     . "$HOME/.nvm/nvm.sh"
