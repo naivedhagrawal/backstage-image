@@ -23,8 +23,6 @@ pipeline {
                     corepack enable
                     yarn set version 4.4.1
                     yarn install --mode update-lockfile || (rm yarn.lock && yarn install)
-                    yarn tsc
-                    yarn build:backend
                     apk add --update docker openrc
                     rc-update add docker boot
                     service docker start
@@ -48,7 +46,7 @@ pipeline {
             steps {
                 container('build-container') {
                     dir("${BACKSTAGE_APP}") {
-                        sh 'yarn set version stable'
+                        sh 'yarn set version 4.4.1'
                         sh 'yarn tsc'
                         sh 'yarn install --immutable'
                     }
