@@ -30,6 +30,7 @@ spec:
                 container('build-container') {
                     sh '''
                     apk add --no-cache curl bash git jq wget docker-cli nodejs npm
+                    npm install -g corepack
                     corepack enable
                     corepack prepare yarn@stable --activate
                     npm install -g npm  # Ensure latest npm is installed
