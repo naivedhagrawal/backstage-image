@@ -25,7 +25,6 @@ pipeline {
                     yarn install --mode update-lockfile || (rm yarn.lock && yarn install)
                     apk add --update docker openrc
                     rc-update add docker boot
-                    service docker start
                     '''
                 }
             }
