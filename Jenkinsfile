@@ -12,8 +12,8 @@ pipeline {
             steps {
                 container('build-container') {
                     sh '''
-                        apk add --no-cache build-base make curl wget git
-                        wget -qO- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.2/install.sh | sh
+                        apk add --no-cache build-base make curl wget git bash
+                        wget -qO- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.2/install.sh | bash
                         nvm install lts/iron
                     '''
                 }
