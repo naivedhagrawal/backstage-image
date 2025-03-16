@@ -17,11 +17,11 @@ pipeline {
             steps {
                 container('build-container') {
                     sh '''
+                        # Install necessary tools
                         apk add --no-cache build-base linux-headers docker openrc
                         npm install -g corepack @backstage/create-app
                         corepack enable
                         yarn set version 4.4.1
-                        yarn install --mode update-lockfile || (rm yarn.lock && yarn install)
                     '''
                 }
             }
@@ -31,7 +31,8 @@ pipeline {
             steps {
                 container('build-container') {
                     sh '''
-                        yes | npx @backstage/create-app@latest --path=${BACKSTAGE_APP}
+                        # Avoid app name prompt by pre-assigning the name
+                        echo "backstage" | npx @backstage/create-app@latest --path=${BACKSTAGE_APP} --no-git --skip-install
                     '''
                 }
             }
@@ -42,6 +43,7 @@ pipeline {
                 container('build-container') {
                     dir("${BACKSTAGE_APP}") {
                         sh '''
+                            # Resolve dependency conflicts and install necessary packages
                             rm yarn.lock || true
                             yarn install --mode update-lockfile
                             yarn add react@17.0.2 react-dom@17.0.2 @testing-library/react@16.14.0 --exact
@@ -57,6 +59,7 @@ pipeline {
                 container('build-container') {
                     dir("${BACKSTAGE_APP}") {
                         sh '''
+                            # Build the frontend and backend
                             yarn tsc
                             yarn build
                             yarn build:backend --config app-config.production.yaml
