@@ -29,6 +29,7 @@ spec:
         stage('Create Backstage App') {
             steps {
                 container('node') {
+                    sh "corepack enable"  // Enable Corepack to manage Yarn
                     sh "npm install -g @backstage/create-app"
                     sh "echo '${BACKSTAGE_APP}\n' | npx @backstage/create-app@latest --path=${BACKSTAGE_APP}"
                 }
@@ -42,6 +43,17 @@ spec:
                         sh 'corepack enable'  // Enable Corepack to manage Yarn
                         sh 'yarn set version 4.4.1'  // Set a specific Yarn version
                         sh 'rm -f yarn.lock && yarn install --immutable --check-cache'  // Ensure strict dependency resolution
+                    }
+                }
+            }
+        }
+
+        stage('Ensure Compatible Dependencies') {
+            steps {
+                container('node') {
+                    dir("${BACKSTAGE_APP}") {
+                        sh 'yarn add react@18.3.1 react-dom@18.3.1 @testing-library/react@16.0.0 --exact'  // Ensure compatible versions
+                        sh 'yarn backstage-cli versions:bump'  // Keep Backstage packages updated
                     }
                 }
             }
