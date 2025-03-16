@@ -12,8 +12,9 @@ pipeline {
             steps {
                 container('build-container') {
                     sh '''
-                        # Install necessary tools, including Python
-                        apk add --no-cache build-base 
+                        apk add --no-cache build-base make curl wget git
+                        wget -qO- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.2/install.sh | bash
+                        nvm install lts/iron
                     '''
                 }
             }
