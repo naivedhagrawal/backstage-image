@@ -24,7 +24,6 @@ pipeline {
                     yarn set version 4.4.1
                     yarn install --mode update-lockfile || (rm yarn.lock && yarn install)
                     apk add --update docker openrc
-                    service docker start
                     '''
                 }
             }
@@ -46,6 +45,7 @@ pipeline {
                 container('build-container') {
                     dir("${BACKSTAGE_APP}") {
                         sh '''
+                            rm yarn.lock
                             yarn install --mode update-lockfile
                             yarn add react@17.0.2 react-dom@17.0.2 @testing-library/react@16.14.0 --exact
                         '''
