@@ -41,7 +41,7 @@ spec:
                     dir("${BACKSTAGE_APP}") {
                         sh 'corepack enable'  // Enable Corepack to manage Yarn
                         sh 'yarn set version stable'  // Ensure a stable version of Yarn
-                        sh 'yarn install --immutable'  // Strict dependency resolution
+                        sh 'rm -f yarn.lock && yarn install --immutable'  // Strict dependency resolution with lockfile cleanup
                     }
                 }
             }
