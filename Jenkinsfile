@@ -7,7 +7,7 @@ kind: Pod
 spec:
   containers:
   - name: build-container
-    image: node:20-bullseye
+    image: node:20-bookworm
     command: ["sh", "-c", "while true; do sleep 30; done"]
     tty: true
     securityContext:
@@ -29,8 +29,9 @@ spec:
             steps {
                 container('build-container') {
                     sh "apt-get update && apt-get install -y docker.io curl bash git jq wget"
+                    sh "curl -fsSL https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.4/install.sh | bash"
+                    sh "export NVM_DIR=\"$HOME/.nvm\" && . \"$NVM_DIR/nvm.sh\" && nvm install lts/iron && nvm use lts/iron"
                     sh "corepack enable"  // Enable Corepack to manage Yarn
-                    sh "nvm install lts/iron && nvm use lts/iron"  // Install Node.js LTS
                     sh "yarn set version 4.4.1"  // Set a specific Yarn version
                 }
             }
