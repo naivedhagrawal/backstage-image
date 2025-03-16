@@ -7,7 +7,7 @@ kind: Pod
 spec:
   containers:
   - name: build-container
-    image: node:20-alpine
+    image: node:20-bullseye
     command: ["sh", "-c", "while true; do sleep 30; done"]
     tty: true
     securityContext:
@@ -28,7 +28,7 @@ spec:
         stage('Setup Environment') {
             steps {
                 container('build-container') {
-                    sh "apk add --no-cache docker-cli curl bash git jq"
+                    sh "apt-get update && apt-get install -y docker.io curl bash git jq"
                     sh "corepack enable"  // Enable Corepack to manage Yarn
                 }
             }
