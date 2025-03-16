@@ -18,7 +18,7 @@ pipeline {
                 container('build-container') {
                     sh '''
                         # Install necessary tools, including Python
-                        apk add --no-cache build-base linux-headers python3 python3-dev py3-pip docker openrc
+                        apk add --no-cache build-base linux-headers python3 python3-dev py3-pip docker openrc jq
                         ln -sf python3 /usr/bin/python
                         npm install -g corepack @backstage/create-app
                         corepack enable
