@@ -22,8 +22,9 @@ pipeline {
                     npm install -g corepack
                     corepack enable
                     yarn set version stable
-                    yarn tsc
                     yarn install --immutable
+                    yarn tsc
+                    yarn build:backend
                     apk add --update docker openrc
                     rc-update add docker boot
                     service docker start
