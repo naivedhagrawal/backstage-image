@@ -37,6 +37,7 @@ spec:
                     nvm use lts/iron
                     corepack enable
                     yarn set version 4.4.1
+                    npm install -g npm  # Ensure npm is installed globally
                     '''
                 }
             }
