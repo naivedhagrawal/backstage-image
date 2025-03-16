@@ -28,13 +28,14 @@ spec:
         stage('Setup Environment') {
             steps {
                 container('build-container') {
-                    sh "apk add --no-cache curl bash git jq wget docker-cli nodejs npm"
+                    sh "apk add --no-cache curl bash git jq wget docker-cli nodejs npm yarn"
                     sh "curl -fsSL https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.4/install.sh | bash"
                     sh '''
                     export NVM_DIR="$HOME/.nvm"
                     [ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"
                     nvm install lts/iron
                     nvm use lts/iron
+                    yarn install
                     yarn set version 4.4.1
                     npm install -g npm  # Ensure npm is installed globally
                     '''
