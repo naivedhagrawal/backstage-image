@@ -6,20 +6,12 @@ apiVersion: v1
 kind: Pod
 spec:
   containers:
-  - name: jnlp
-    image: jenkins/inbound-agent:latest
-  - name: node
-    image: node:20
-    command: ["cat"]
+  - name: build-container
+    image: alpine:latest
+    command: ["sh", "-c", "while true; do sleep 30; done"]
     tty: true
-  - name: docker
-    image: docker:latest
-    command: ["cat"]
-    tty: true
-  - name: build-tools
-    image: node:20
-    command: ["cat"]
-    tty: true
+    securityContext:
+      privileged: true
     env:
       - name: NODE_OPTIONS
         value: "--max_old_space_size=4096"
@@ -35,17 +27,18 @@ spec:
     stages {
         stage('Setup Environment') {
             steps {
-                container('node') {
+                container('build-container') {
+                    sh "apk add --no-cache nodejs npm docker-cli curl bash git"
                     sh "corepack enable"  // Enable Corepack to manage Yarn
                     sh "curl -fsSL https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.4/install.sh | bash"
-                    sh "export NVM_DIR=\"$HOME/.nvm\" && [ -s \"$NVM_DIR/nvm.sh\" ] && \\. \"$NVM_DIR/nvm.sh\" && nvm install --lts && nvm use --lts"
+                    sh "export NVM_DIR=\"$HOME/.nvm\" && [ -s \"$NVM_DIR/nvm.sh\" ] && \\\n                       . \"$NVM_DIR/nvm.sh\" && nvm install --lts && nvm use --lts"
                 }
             }
         }
 
         stage('Create Backstage App') {
             steps {
-                container('node') {
+                container('build-container') {
                     sh "npm install -g @backstage/create-app"
                     sh "echo '${BACKSTAGE_APP}\n' | npx @backstage/create-app@latest --path=${BACKSTAGE_APP}"
                 }
@@ -54,7 +47,7 @@ spec:
 
         stage('Install Dependencies') {
             steps {
-                container('node') {
+                container('build-container') {
                     dir("${BACKSTAGE_APP}") {
                         sh 'corepack enable'  // Enable Corepack to manage Yarn
                         sh 'yarn set version 4.4.1'  // Set a specific Yarn version
@@ -66,7 +59,7 @@ spec:
 
         stage('Ensure Compatible Dependencies') {
             steps {
-                container('node') {
+                container('build-container') {
                     dir("${BACKSTAGE_APP}") {
                         sh 'yarn add react@18.3.1 react-dom@18.3.1 @testing-library/react@16.0.0 --exact'  // Ensure compatible versions
                         sh 'yarn backstage-cli versions:bump'  // Keep Backstage packages updated
@@ -77,7 +70,7 @@ spec:
 
         stage('Build Backstage') {
             steps {
-                container('build-tools') {
+                container('build-container') {
                     dir("${BACKSTAGE_APP}") {
                         sh 'yarn tsc'
                         sh 'yarn build'
@@ -89,7 +82,7 @@ spec:
 
         stage('Build Docker Image') {
             steps {
-                container('docker') {
+                container('build-container') {
                     dir("${BACKSTAGE_APP}") {
                         sh "docker build -t ${DOCKER_IMAGE} ."
                     }
@@ -99,7 +92,7 @@ spec:
 
         stage('Push Docker Image') {
             steps {
-                container('docker') {
+                container('build-container') {
                     withDockerRegistry([credentialsId: 'docker-hub-up', url: 'https://index.docker.io/v1/']) {
                         sh "docker push ${DOCKER_IMAGE}"
                     }
