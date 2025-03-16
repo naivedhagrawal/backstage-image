@@ -9,13 +9,20 @@ spec:
   - name: jnlp
     image: jenkins/inbound-agent:latest
   - name: node
-    image: node:23.10
+    image: node:20
     command: ["cat"]
     tty: true
   - name: docker
     image: docker:latest
     command: ["cat"]
     tty: true
+  - name: build-tools
+    image: node:20
+    command: ["cat"]
+    tty: true
+    env:
+      - name: NODE_OPTIONS
+        value: "--max_old_space_size=4096"
             '''
         }
     }
@@ -26,10 +33,19 @@ spec:
     }
 
     stages {
-        stage('Create Backstage App') {
+        stage('Setup Environment') {
             steps {
                 container('node') {
                     sh "corepack enable"  // Enable Corepack to manage Yarn
+                    sh "npm install -g nvm"
+                    sh "nvm install lts/iron && nvm use lts/iron"
+                }
+            }
+        }
+
+        stage('Create Backstage App') {
+            steps {
+                container('node') {
                     sh "npm install -g @backstage/create-app"
                     sh "echo '${BACKSTAGE_APP}\n' | npx @backstage/create-app@latest --path=${BACKSTAGE_APP}"
                 }
@@ -61,7 +77,7 @@ spec:
 
         stage('Build Backstage') {
             steps {
-                container('node') {
+                container('build-tools') {
                     dir("${BACKSTAGE_APP}") {
                         sh 'yarn tsc'
                         sh 'yarn build'
