@@ -37,8 +37,8 @@ spec:
             steps {
                 container('node') {
                     sh "corepack enable"  // Enable Corepack to manage Yarn
-                    sh "npm install -g nvm"
-                    sh "nvm install lts/iron && nvm use lts/iron"
+                    sh "curl -fsSL https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.4/install.sh | bash"
+                    sh "export NVM_DIR=\"$HOME/.nvm\" && [ -s \"$NVM_DIR/nvm.sh\" ] && \\. \"$NVM_DIR/nvm.sh\" && nvm install --lts && nvm use --lts"
                 }
             }
         }
