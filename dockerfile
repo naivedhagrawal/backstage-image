@@ -32,4 +32,3 @@ EXPOSE 7007
 
 # Start the Backstage app
 CMD ["node", "dist/packages/backend"]
-
