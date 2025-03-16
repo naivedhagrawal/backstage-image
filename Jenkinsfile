@@ -22,16 +22,5 @@ pipeline {
                 }
             }
         }
-        stage('Verify Node and Python') {
-            steps {
-                container('build-container') {
-                    sh '''
-                        export NVM_DIR="$HOME/.nvm"
-                        [ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh" && \
-                        node -v && npm -v && python --version && pip --version
-                    '''
-                }
-            }
-        }
     }
 }
