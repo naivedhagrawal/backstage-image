@@ -49,16 +49,22 @@ pipeline {
                 container('build-container') {
                     dir("${BACKSTAGE_APP}") {
                         sh '''
-                            # Install compatible dependencies
+                            # Clear Yarn cache to ensure fresh dependency resolution
+                            yarn cache clean
+
+                            # Install dependencies with compatibility resolutions
                             yarn install --mode update-lockfile
-                            yarn add react@18.0.2 react-dom@18.0.2
-                            yarn add @types/react --dev
-                            yarn add @testing-library/dom
+                            yarn add react react-dom
+                            yarn add @types/react @testing-library/dom --dev
+
+                            # Optionally add resolutions to package.json to lock versions
+                            jq '.resolutions |= {"react": "^18.2.0", "react-dom": "^18.2.0"}' package.json > package.tmp && mv package.tmp package.json
                         '''
                     }
                 }
             }
         }
+
 
         stage('Build Backstage') {
             steps {
