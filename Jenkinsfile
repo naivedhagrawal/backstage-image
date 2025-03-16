@@ -29,7 +29,7 @@ spec:
             steps {
                 container('build-container') {
                     sh '''
-                    apk add --no-cache curl bash git jq wget docker-cli nodejs npm
+                    apk add --no-cache curl bash git jq wget docker-cli nodejs npm corepack yarn
                     corepack enable
                     corepack prepare yarn@stable --activate
                     npm install -g npm  # Ensure latest npm is installed
