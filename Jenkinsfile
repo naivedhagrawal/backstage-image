@@ -12,12 +12,11 @@ pipeline {
             steps {
                 container('build-container') {
                     sh 'apk add --no-cache build-base make curl wget git bash python3 python3-dev py3-pip'
-                    sh 'curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.2/install.sh | bash'
-                    sh '. "$HOME/.nvm/nvm.sh"'
-                    sh 'nvm install 20'
+                    sh 'curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.3/install.sh | bash'
+                    sh 'nvm install --lts'
                     sh 'node -v'
-                    sh 'nvm current'
-                    sh 'corepack enable yarn'
+                    sh 'corepack enable'
+                    sh 'corepack prepare yarn@4.4.1 --activate'
                     sh 'yarn -v'
                 }
             }
