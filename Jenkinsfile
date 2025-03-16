@@ -30,7 +30,7 @@ spec:
             steps {
                 container('node') {
                     sh "npm install -g @backstage/create-app"
-                    sh "npx @backstage/create-app@latest --path=${BACKSTAGE_APP}"
+                    sh "npx @backstage/create-app@latest --path=${BACKSTAGE_APP} --no-private --skip-install --yes"
                 }
             }
         }
