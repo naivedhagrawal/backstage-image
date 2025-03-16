@@ -30,7 +30,7 @@ spec:
             steps {
                 container('node') {
                     sh "npm install -g @backstage/create-app"
-                    sh "echo '${BACKSTAGE_APP}\\n' | npx @backstage/create-app@latest --path=${BACKSTAGE_APP}"
+                    sh "echo '${BACKSTAGE_APP}\n' | npx @backstage/create-app@latest --path=${BACKSTAGE_APP}"
                 }
             }
         }
@@ -39,8 +39,9 @@ spec:
             steps {
                 container('node') {
                     dir("${BACKSTAGE_APP}") {
-                        sh 'yarn install --mode update-lockfile || true'
-                        sh 'yarn add react@17.0.2 react-dom@17.0.2 @testing-library/react@16.14.0 --exact'
+                        sh 'yarn explain peer-requirements'
+                        sh 'yarn add @types/react@18 @testing-library/react@16.14.0 react@17.0.2 react-dom@17.0.2 --exact'
+                        sh 'yarn install --immutable --check-cache'
                     }
                 }
             }
