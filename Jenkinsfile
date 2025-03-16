@@ -23,16 +23,14 @@ spec:
     environment {
         BACKSTAGE_APP = "my-backstage-app"
         DOCKER_IMAGE = "naivedh/backstage:latest"
-        BACKSTAGE_SCOPE = "maxlife"
     }
 
     stages {
         stage('Create Backstage App') {
             steps {
                 container('node') {
-                    sh "npm install -g @backstage/create-app@latest"
-                    sh 'export PATH="$PATH:/root/.npm-global/bin"' // Add the global bin directory to PATH
-                    sh "backstage-cli create-app --path=${BACKSTAGE_APP} --yes --scope ${BACKSTAGE_SCOPE}"
+                    sh "npm install -g @backstage/create-app"
+                    sh "npx @backstage/create-app@latest --path=${BACKSTAGE_APP}"
                 }
             }
         }
