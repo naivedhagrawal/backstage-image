@@ -28,7 +28,7 @@ spec:
         stage('Setup Environment') {
             steps {
                 container('build-container') {
-                    sh "apk add --no-cache docker-cli curl bash git"
+                    sh "apk add --no-cache docker-cli curl bash git jq"
                     sh "corepack enable"  // Enable Corepack to manage Yarn
                 }
             }
@@ -49,7 +49,8 @@ spec:
                     dir("${BACKSTAGE_APP}") {
                         sh 'corepack enable'  // Enable Corepack to manage Yarn
                         sh 'yarn set version 4.4.1'  // Set a specific Yarn version
-                        sh 'rm -f yarn.lock && yarn install --immutable --check-cache'  // Ensure strict dependency resolution
+                        sh "jq '.dependencies.react=\"18.3.1\" | .dependencies.\"react-dom\"=\"18.3.1\" | .dependencies.\"@testing-library/react\"=\"16.0.0\"' package.json > temp.json && mv temp.json package.json"
+                        sh 'rm -f yarn.lock && yarn install --mode=skip-builds'  // Prevent lockfile modification errors
                     }
                 }
             }
@@ -59,7 +60,6 @@ spec:
             steps {
                 container('build-container') {
                     dir("${BACKSTAGE_APP}") {
-                        sh 'yarn add react@18.3.1 react-dom@18.3.1 @testing-library/react@16.0.0 --exact'  // Ensure compatible versions
                         sh 'yarn backstage-cli versions:bump'  // Keep Backstage packages updated
                     }
                 }
