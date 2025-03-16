@@ -22,7 +22,7 @@ spec:
 
     environment {
         BACKSTAGE_APP = "my-backstage-app"
-        DOCKER_IMAGE = "your-docker-repo/backstage:latest"
+        DOCKER_IMAGE = "naivedh/backstage:latest"
     }
 
     stages {
