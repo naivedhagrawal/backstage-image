@@ -1,23 +1,10 @@
 pipeline {
     agent {
-        kubernetes {
-            yaml '''
-apiVersion: v1
-kind: Pod
-spec:
-  containers:
-  - name: build-container
-    image: alpine:latest
-    command: ["sh", "-c", "while true; do sleep 30; done"]
-    tty: true
-    securityContext:
-      privileged: true
-    env:
-      - name: NODE_OPTIONS
-        value: "--max_old_space_size=4096"
-            '''
+            kubernetes {
+                yaml Pod('backstage-setup','alpine:lastest')
+                showRawYaml false
+            }
         }
-    }
 
     environment {
         BACKSTAGE_APP = "my-backstage-app"
