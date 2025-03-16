@@ -29,8 +29,8 @@ spec:
         stage('Create Backstage App') {
             steps {
                 container('node') {
-                    sh 'yarn install --mode update-lockfile || true'
-                    sh 'yarn add react@16.14.0 react-dom@16.14.0 @testing-library/react@16.14.0 --exact'
+                    sh "npm install -g @backstage/create-app"
+                    sh "echo '${BACKSTAGE_APP}\\n' | npx @backstage/create-app@latest --path=${BACKSTAGE_APP}"
                 }
             }
         }
@@ -40,7 +40,7 @@ spec:
                 container('node') {
                     dir("${BACKSTAGE_APP}") {
                         sh 'yarn install --mode update-lockfile || true'
-                        sh 'yarn add react@17.x react-dom@17.x @testing-library/react@16.x --exact'
+                        sh 'yarn add react@16.14.0 react-dom@16.14.0 @testing-library/react@16.14.0 --exact'
                     }
                 }
             }
