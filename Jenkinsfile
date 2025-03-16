@@ -68,6 +68,7 @@ spec:
                 container('build-container') {
                     dir("${BACKSTAGE_APP}") {
                         sh 'yarn set version stable'
+                        sh 'yarn tsc'
                         sh 'yarn install --immutable'
                     }
                 }
