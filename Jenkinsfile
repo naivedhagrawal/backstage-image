@@ -7,7 +7,7 @@ kind: Pod
 spec:
   containers:
   - name: build-container
-    image: fedora:latest
+    image: debian:latest
     command: ["sh", "-c", "while true; do sleep 30; done"]
     tty: true
     securityContext:
@@ -28,7 +28,7 @@ spec:
         stage('Setup Environment') {
             steps {
                 container('build-container') {
-                    sh "dnf install -y docker curl bash git jq wget"
+                    sh "apt-get update && apt-get install -y curl bash git jq wget docker.io"
                     sh "curl -fsSL https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.4/install.sh | bash"
                     sh '''
                     export NVM_DIR="$HOME/.nvm"
