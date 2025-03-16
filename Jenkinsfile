@@ -28,16 +28,11 @@ spec:
         stage('Setup Environment') {
             steps {
                 container('build-container') {
-                    sh "apk add --no-cache curl bash git jq wget docker-cli nodejs npm yarn"
-                    sh "curl -fsSL https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.4/install.sh | bash"
                     sh '''
-                    export NVM_DIR="$HOME/.nvm"
-                    [ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"
-                    nvm install lts/iron
-                    nvm use lts/iron
-                    yarn install
-                    yarn set version 4.4.1
-                    npm install -g npm  # Ensure npm is installed globally
+                    apk add --no-cache curl bash git jq wget docker-cli nodejs npm
+                    corepack enable
+                    corepack prepare yarn@stable --activate
+                    npm install -g npm  # Ensure latest npm is installed
                     '''
                 }
             }
@@ -47,8 +42,6 @@ spec:
             steps {
                 container('build-container') {
                     sh '''
-                    export NVM_DIR="$HOME/.nvm"
-                    [ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"
                     npm install -g @backstage/create-app
                     echo '${BACKSTAGE_APP}\n' | npx @backstage/create-app@latest --path=${BACKSTAGE_APP}
                     '''
@@ -60,9 +53,8 @@ spec:
             steps {
                 container('build-container') {
                     dir("${BACKSTAGE_APP}") {
-                        sh 'yarn set version 4.4.1'  // Set a specific Yarn version
-                        sh 'yarn add react@18.2.0 react-dom@18.2.0 @testing-library/react@16.0.0 @types/react'
-                        sh 'yarn install --mode=update-lockfile --check-cache'  // Allow updates while ensuring consistency
+                        sh 'yarn set version stable'  # Use latest stable Yarn
+                        sh 'yarn install --immutable'  # Ensure lockfile consistency
                     }
                 }
             }
@@ -72,7 +64,7 @@ spec:
             steps {
                 container('build-container') {
                     dir("${BACKSTAGE_APP}") {
-                        sh 'yarn backstage-cli versions:bump'  // Keep Backstage packages updated
+                        sh 'yarn backstage-cli versions:bump'  # Keep Backstage up to date
                     }
                 }
             }
