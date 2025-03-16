@@ -28,8 +28,9 @@ spec:
         stage('Setup Environment') {
             steps {
                 container('build-container') {
-                    sh "apt-get update && apt-get install -y docker.io curl bash git jq"
+                    sh "apt-get update && apt-get install -y docker.io curl bash git jq wget"
                     sh "corepack enable"  // Enable Corepack to manage Yarn
+                    sh "nvm install lts/iron && nvm use lts/iron"  // Install Node.js LTS
                 }
             }
         }
