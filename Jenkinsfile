@@ -7,7 +7,7 @@ kind: Pod
 spec:
   containers:
   - name: build-container
-    image: node:20-bookworm
+    image: fedora:latest
     command: ["sh", "-c", "while true; do sleep 30; done"]
     tty: true
     securityContext:
@@ -28,7 +28,7 @@ spec:
         stage('Setup Environment') {
             steps {
                 container('build-container') {
-                    sh "apt-get update && apt-get install -y docker.io curl bash git jq wget"
+                    sh "dnf update -y && dnf install -y docker curl bash git jq wget"
                     sh "curl -fsSL https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.4/install.sh | bash"
                     sh "export NVM_DIR=\"$HOME/.nvm\" && . \"$NVM_DIR/nvm.sh\" && nvm install lts/iron && nvm use lts/iron"
                     sh "corepack enable"  // Enable Corepack to manage Yarn
