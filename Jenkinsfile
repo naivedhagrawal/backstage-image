@@ -17,12 +17,12 @@ pipeline {
             steps {
                 container('build-container') {
                     sh '''
-                        # Install tools and dependencies
-                        apk add --no-cache build-base linux-headers docker openrc
+                        # Install necessary tools, including Python
+                        apk add --no-cache build-base linux-headers docker openrc python3 python3-dev py3-pip
+                        ln -sf python3 /usr/bin/python
                         npm install -g corepack @backstage/create-app
                         corepack enable
                         yarn set version 4.4.1
-                        # Clean up root directory misconfigurations
                         rm -f /home/jenkins/agent/workspace/backstage-image/{yarn.lock,package.json}
                     '''
                 }
@@ -60,13 +60,18 @@ pipeline {
             }
         }
 
-
         stage('Build Backstage') {
             steps {
                 container('build-container') {
                     dir("${BACKSTAGE_APP}") {
                         sh '''
-                            # Build the app
+                            # Ensure the build script exists in package.json
+                            if ! grep -q '"build":' package.json; then
+                                echo 'Adding build script to package.json'
+                                echo '{"scripts": {"build": "yarn workspace backend build && yarn workspace frontend build"}}' > package.json
+                            fi
+
+                            # Run build
                             yarn tsc
                             yarn build
                             yarn build:backend --config app-config.production.yaml
@@ -75,6 +80,7 @@ pipeline {
                 }
             }
         }
+
 
         stage('Build Docker Image') {
             steps {
