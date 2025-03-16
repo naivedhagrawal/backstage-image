@@ -1,11 +1,11 @@
 @Library('k8s-shared-lib') _
 pipeline {
     agent {
-            kubernetes {
-                yaml pod('build-container','node:20-alpine')
-                showRawYaml false
-            }
+        kubernetes {
+            yaml pod('build-container','node:20-alpine')
+            showRawYaml false
         }
+    }
 
     environment {
         BACKSTAGE_APP = "my-backstage-app"
@@ -17,13 +17,11 @@ pipeline {
             steps {
                 container('build-container') {
                     sh '''
-                    apk add --no-cache build-base
-                    apk add --no-cache linux-headers
-                    npm install -g corepack
-                    corepack enable
-                    yarn set version 4.4.1
-                    yarn install --mode update-lockfile || (rm yarn.lock && yarn install)
-                    apk add --update docker openrc
+                        apk add --no-cache build-base linux-headers docker openrc
+                        npm install -g corepack @backstage/create-app
+                        corepack enable
+                        yarn set version 4.4.1
+                        yarn install --mode update-lockfile || (rm yarn.lock && yarn install)
                     '''
                 }
             }
@@ -33,8 +31,23 @@ pipeline {
             steps {
                 container('build-container') {
                     sh '''
-                    echo 'backstage' | npx @backstage/create-app@latest --path=${BACKSTAGE_APP}
+                        yes | npx @backstage/create-app@latest --path=${BACKSTAGE_APP}
                     '''
+                }
+            }
+        }
+
+        stage('Install Dependencies') {
+            steps {
+                container('build-container') {
+                    dir("${BACKSTAGE_APP}") {
+                        sh '''
+                            rm yarn.lock || true
+                            yarn install --mode update-lockfile
+                            yarn add react@17.0.2 react-dom@17.0.2 @testing-library/react@16.14.0 --exact
+                            yarn add @types/react --dev
+                        '''
+                    }
                 }
             }
         }
@@ -44,8 +57,6 @@ pipeline {
                 container('build-container') {
                     dir("${BACKSTAGE_APP}") {
                         sh '''
-                            rm yarn.lock
-                            yarn install --mode update-lockfile
                             yarn tsc
                             yarn build
                             yarn build:backend --config app-config.production.yaml
