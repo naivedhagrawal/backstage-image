@@ -1,7 +1,7 @@
 pipeline {
     agent {
             kubernetes {
-                yaml Pod('backstage-setup','alpine:lastest')
+                yaml Pod('backstage-setup','python:3.11-alpine')
                 showRawYaml false
             }
         }
