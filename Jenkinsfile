@@ -31,7 +31,7 @@ spec:
             steps {
                 container('node') {
                     sh "npm install -g @backstage/create-app@latest"
-                    sh "echo ${BACKSTAGE_APP} | npx @backstage/create-app@latest --path=${BACKSTAGE_APP} --scope ${BACKSTAGE_SCOPE}"
+                    sh "backstage-cli create-app --path=${BACKSTAGE_APP} --yes --scope ${BACKSTAGE_SCOPE}"
                 }
             }
         }
