@@ -47,7 +47,6 @@ pipeline {
                         sh '''
                             rm yarn.lock
                             yarn install --mode update-lockfile
-                            yarn add react@17.0.2 react-dom@17.0.2 @testing-library/react@16.14.0 --exact
                             yarn tsc
                             yarn build
                             yarn build:backend --config app-config.production.yaml
