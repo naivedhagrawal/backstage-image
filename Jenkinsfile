@@ -46,8 +46,12 @@ spec:
         stage('Create Backstage App') {
             steps {
                 container('build-container') {
-                    sh "npm install -g @backstage/create-app"
-                    sh "echo '${BACKSTAGE_APP}\n' | npx @backstage/create-app@latest --path=${BACKSTAGE_APP}"
+                    sh '''
+                    export NVM_DIR="$HOME/.nvm"
+                    [ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"
+                    npm install -g @backstage/create-app
+                    echo '${BACKSTAGE_APP}\n' | npx @backstage/create-app@latest --path=${BACKSTAGE_APP}
+                    '''
                 }
             }
         }
