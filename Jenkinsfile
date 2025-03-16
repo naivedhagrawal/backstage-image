@@ -30,7 +30,7 @@ spec:
             steps {
                 container('node') {
                     sh "npm install -g @backstage/create-app"
-                    echo "my-backstage-app\n" | npx @backstage/create-app@latest --path=my-backstage-app
+                    sh "echo '${BACKSTAGE_APP}\\n' | npx @backstage/create-app@latest --path=${BACKSTAGE_APP}"
                 }
             }
         }
