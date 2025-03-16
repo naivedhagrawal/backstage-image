@@ -12,7 +12,8 @@ pipeline {
             steps {
                 container('build-container') {
                     sh '''
-                        apk add --no-cache build-base make curl wget git bash && \
+                        apk add --no-cache build-base make curl wget git bash python3 python3-dev py3-pip && \
+                        ln -sf python3 /usr/bin/python && \
                         wget -qO- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.2/install.sh | bash && \
                         export NVM_DIR="$HOME/.nvm" && \
                         [ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh" && \
@@ -21,18 +22,16 @@ pipeline {
                 }
             }
         }
-        stage('Verify Node') {
+        stage('Verify Node and Python') {
             steps {
                 container('build-container') {
                     sh '''
                         export NVM_DIR="$HOME/.nvm"
                         [ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh" && \
-                        node -v && npm -v
+                        node -v && npm -v && python --version && pip --version
                     '''
                 }
             }
         }
     }
 }
-
-        
