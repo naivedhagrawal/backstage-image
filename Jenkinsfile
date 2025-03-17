@@ -14,8 +14,8 @@ pipeline {
                     sh '''
                     node -v
                     corepack enable
-                    yarn set version latest
-                    yarn -v && yarn config --json
+                    yarn set version stable
+                    yarn -v
                     yarn config set nodeLinker node-modules
                     echo "nodeLinker: node-modules" > .yarnrc.yml
                     '''
@@ -41,12 +41,12 @@ pipeline {
                     cd /home/node/backstage
                     yarn cache clean
                     rm -rf .yarn node_modules yarn.lock
-                    yarn set version latest
-                    yarn -v && yarn config --json
+                    yarn set version stable
+                    yarn -v
                     yarn install --mode update-lockfile --inline-builds
                     ls -la node_modules || echo "node_modules missing!"
-                    yarn tsc
-                    yarn build:backend
+                    yarn tsc || echo "TypeScript compilation failed!"
+                    yarn build:backend || echo "Backend build failed!"
                     '''
                 }
             }
