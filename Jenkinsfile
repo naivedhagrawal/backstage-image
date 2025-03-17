@@ -17,6 +17,8 @@ pipeline {
                     yarn -v
                     corepack enable
                     yarn set version 3.6.3
+                    yarn config set nodeLinker node-modules
+                    echo "nodeLinker: node-modules" > .yarnrc.yml
                     yarn -v
                     '''
                 }
@@ -27,8 +29,8 @@ pipeline {
             steps {
                 container('build-container') {
                     sh '''
-                        echo "backstage" | npx @backstage/create-app@latest --skip-install --path /home/node/backstage
-                        ls -lrt /home/node/backstage
+                    echo "backstage" | npx @backstage/create-app@latest --skip-install --path /home/node/backstage
+                    ls -lrt /home/node/backstage
                     '''
                 }
             }
@@ -40,8 +42,9 @@ pipeline {
                     sh '''
                     cd /home/node/backstage
                     yarn cache clean
-                    yarn install --mode update-lockfile
-                    ls -la node_modules
+                    rm -rf .yarn node_modules yarn.lock
+                    yarn install --mode update-lockfile --inline-builds
+                    ls -la node_modules || echo "node_modules missing!"
                     yarn tsc
                     yarn build:backend
                     '''
