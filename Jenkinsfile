@@ -16,7 +16,7 @@ pipeline {
                     corepack enable yarn
                     yarn -v
                     corepack enable
-                    yarn set version 4.4.1
+                    yarn set version 3.6.3
                     yarn -v
                     '''
                 }
@@ -40,8 +40,6 @@ pipeline {
                     sh '''
                     cd /home/node/backstage
                     yarn cache clean
-                    yarn config set nodeLinker node-modules
-                    yarn config get nodeLinker
                     yarn install --mode update-lockfile
                     ls -la node_modules
                     yarn tsc
