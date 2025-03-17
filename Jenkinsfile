@@ -12,6 +12,8 @@ pipeline {
             steps {
                 container('build-container') {
                     sh '''
+                        node -v
+                        npm -v
                         npm install -g corepack
                         corepack enable
                         yarn set version stable
