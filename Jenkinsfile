@@ -14,6 +14,9 @@ pipeline {
                     sh 'node -v'
                     sh 'corepack enable yarn'
                     sh 'yarn -v'
+                    sh 'corepack enable'
+                    sh 'yarn set version 4.4.1'
+                    sh 'yarn -v'
                 }
             }
         }
