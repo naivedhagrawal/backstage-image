@@ -25,7 +25,7 @@ pipeline {
                 container('build-container') {
                     sh 'echo "backstage" | npx @backstage/create-app@latest --skip-install'
                     sh 'ls -lh'
-                    sh 'cd backstage-app'
+                    sh 'cd backstage'
                     sh 'ls -lh'
                 }
             }
@@ -33,7 +33,7 @@ pipeline {
         stage('Install Dependencies') {
             steps {
                 container('build-container') {
-                    sh 'cd backstage-app'
+                    sh 'cd backstage'
                     sh 'yarn install'
                     sh 'yarn dev'
                 }
