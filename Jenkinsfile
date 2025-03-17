@@ -14,11 +14,10 @@ pipeline {
                     sh '''
                     node -v
                     corepack enable
-                    corepack prepare yarn@stable --activate
-                    yarn set version stable
+                    yarn set version latest
+                    yarn -v && yarn config --json
                     yarn config set nodeLinker node-modules
                     echo "nodeLinker: node-modules" > .yarnrc.yml
-                    yarn -v
                     '''
                 }
             }
@@ -42,10 +41,8 @@ pipeline {
                     cd /home/node/backstage
                     yarn cache clean
                     rm -rf .yarn node_modules yarn.lock
-                    mkdir -p .yarn/releases  # Ensure directory exists
-                    corepack prepare yarn@stable --activate
-                    yarn set version stable
-                    ls -la .yarn/releases
+                    yarn set version latest
+                    yarn -v && yarn config --json
                     yarn install --mode update-lockfile --inline-builds
                     ls -la node_modules || echo "node_modules missing!"
                     yarn tsc
