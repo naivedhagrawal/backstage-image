@@ -14,6 +14,7 @@ pipeline {
                     sh '''
                     node -v
                     corepack enable
+                    corepack prepare yarn@stable --activate
                     yarn set version stable
                     yarn -v
                     yarn config set nodeLinker node-modules
@@ -41,6 +42,8 @@ pipeline {
                     cd /home/node/backstage
                     yarn cache clean
                     rm -rf .yarn node_modules yarn.lock
+                    mkdir -p .yarn/releases
+                    corepack prepare yarn@stable --activate
                     yarn set version stable
                     yarn -v
                     yarn install --mode update-lockfile --inline-builds
