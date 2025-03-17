@@ -2,7 +2,7 @@
 pipeline {
     agent {
         kubernetes {
-            yaml pod('build-container','node:20-alpine')
+            yaml pod('build-container','naivedh/alpine:latest')
             showRawYaml false
         }
     }
@@ -12,9 +12,6 @@ pipeline {
             steps {
                 container('build-container') {
                     sh '''
-                        apk add --no-cache git docker openrc make curl build-base wget python3 py3-pip
-                        rc-update add docker boot
-                        docker --version
                         npm install -g corepack
                         corepack enable
                         yarn set version stable
