@@ -39,6 +39,8 @@ pipeline {
                 container('build-container') {
                     sh '''
                     cd /home/node/backstage
+                    nslookup registry.yarnpkg.com
+                    ping -c 4 registry.yarnpkg.com
                     yarn install --mode update-lockfile
                     yarn tsc
                     yarn build:backend
