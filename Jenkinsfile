@@ -24,6 +24,7 @@ pipeline {
             steps {
                 container('build-container') {
                     sh 'echo "backstage" | npx @backstage/create-app@latest --skip-install'
+                    sh '$(pwd)'
                     sh 'chown -R node:node backstage'
                     sh 'cd $(pwd)/backstage'
                     sh 'ls -lh'
