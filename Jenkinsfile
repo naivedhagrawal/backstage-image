@@ -43,7 +43,9 @@ pipeline {
                     yarn cache clean
                     rm -rf .yarn node_modules yarn.lock
                     mkdir -p .yarn/releases  # Ensure directory exists
+                    corepack prepare yarn@stable --activate
                     yarn set version stable
+                    ls -la .yarn/releases
                     yarn install --mode update-lockfile --inline-builds
                     ls -la node_modules || echo "node_modules missing!"
                     yarn tsc
