@@ -12,11 +12,10 @@ pipeline {
             steps {
                 container('build-container') {
                     sh 'apk add --no-cache build-base make curl wget git bash python3 python3-dev py3-pip'
-                    sh 'curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.3/install.sh | bash'
-                    sh 'nvm install --lts'
+                    sh 'curl -o- https://fnm.vercel.app/install | bash'
+                    sh 'fnm install 22'
                     sh 'node -v'
-                    sh 'corepack enable'
-                    sh 'corepack prepare yarn@4.4.1 --activate'
+                    sh 'corepack enable yarn'
                     sh 'yarn -v'
                 }
             }
