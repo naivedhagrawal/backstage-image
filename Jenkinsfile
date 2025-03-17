@@ -39,6 +39,7 @@ pipeline {
                 container('build-container') {
                     sh '''
                     cd /home/node/backstage
+                    rm -rf yarn.lock
                     yarn install --immutable
                     yarn tsc
                     yarn build:backend
