@@ -17,6 +17,12 @@ pipeline {
                     sh 'corepack enable'
                     sh 'yarn set version 4.4.1'
                     sh 'yarn -v'
+                }
+            }
+        }
+        stage('Create Backstage App') {
+            steps {
+                container('build-container') {
                     sh 'echo "backstage" | npx @backstage/create-app@latest --path=${BACKSTAGE_APP} --skip-install'
                 }
             }
