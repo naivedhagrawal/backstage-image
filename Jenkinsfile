@@ -23,7 +23,7 @@ pipeline {
             steps {
                 container('build-container') {
                     sh '''
-                        echo "backstage" | npx @backstage/create-app@latest --path=app
+                        echo "backstage" | npx @backstage/create-app@latest --path=backstage-app
                     '''
                 }
             }
