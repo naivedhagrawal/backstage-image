@@ -13,7 +13,9 @@ pipeline {
                 container('build-container') {
                     sh '''
                         apk add --no-cache git
-                        npm install -g yarn
+                        if ! command -v yarn &> /dev/null; then
+                          npm install -g yarn
+                        fi
                         npm install -g corepack
                         corepack enable
                         yarn --version
