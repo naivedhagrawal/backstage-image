@@ -43,13 +43,10 @@ pipeline {
                     yarn cache clean
                     rm -rf .yarn node_modules yarn.lock
                     mkdir -p .yarn/releases
-                    corepack prepare yarn@4.4.1 --activate
-                    yarn set version 4.4.1
-                    yarn -v
                     yarn install --mode update-lockfile --inline-builds
-                    ls -la node_modules || echo "node_modules missing!"
-                    yarn tsc || echo "TypeScript compilation failed!"
-                    yarn build:backend || echo "Backend build failed!"
+                    ls -la node_modules || { echo "node_modules missing!"; exit 1; }
+                    yarn tsc || { echo "TypeScript compilation failed!"; exit 1; }
+                    yarn build:backend || { echo "Backend build failed!"; exit 1; }
                     '''
                 }
             }
