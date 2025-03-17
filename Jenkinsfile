@@ -14,12 +14,7 @@ pipeline {
                     sh '''
                         node -v
                         npm -v
-                        npm install -g corepack
-                        corepack enable
-                        yarn set version stable
-                        yarn install
                         yarn --version
-                        node -v
                     '''
                 }
             }
