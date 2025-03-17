@@ -12,10 +12,12 @@ pipeline {
             steps {
                 container('build-container') {
                     sh '''
-                        apk add --no-cache git
+                        apk add --no-cache git docker openrc make curl build-base wget
+                        rc-update add docker boot
+                        docker --version
                         npm install -g corepack
                         corepack enable
-                        corepack prepare yarn@4.4.1 --activate # or any desired version
+                        corepack prepare yarn@4.4.1 --activate
                         yarn --version
                         node -v
                     '''
