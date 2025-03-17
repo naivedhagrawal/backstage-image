@@ -13,10 +13,9 @@ pipeline {
                 container('build-container') {
                     sh '''
                     node -v
-                    corepack enable yarn
-                    yarn -v
                     corepack enable
-                    yarn set version 3.6.3
+                    corepack prepare yarn@stable --activate
+                    yarn set version stable
                     yarn config set nodeLinker node-modules
                     echo "nodeLinker: node-modules" > .yarnrc.yml
                     yarn -v
@@ -43,6 +42,8 @@ pipeline {
                     cd /home/node/backstage
                     yarn cache clean
                     rm -rf .yarn node_modules yarn.lock
+                    mkdir -p .yarn/releases  # Ensure directory exists
+                    yarn set version stable
                     yarn install --mode update-lockfile --inline-builds
                     ls -la node_modules || echo "node_modules missing!"
                     yarn tsc
