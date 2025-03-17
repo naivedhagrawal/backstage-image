@@ -24,5 +24,14 @@ pipeline {
                 }
             }
         }
+        stage('Create Backstage App') {
+            steps {
+                container('build-container') {
+                    sh '''
+                        echo "backstage" | npx @backstage/create-app@latest --path=app
+                    '''
+                }
+            }
+        }
     }
 }
