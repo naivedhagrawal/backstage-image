@@ -28,7 +28,7 @@ pipeline {
                 container('build-container') {
                     sh '''
                         echo "backstage" | npx @backstage/create-app@latest --skip-install --path /home/node/backstage
-                        ls -lrt /home/node/
+                        ls -lrt /home/node/backstage
                     '''
                 }
             }
@@ -39,8 +39,7 @@ pipeline {
                 container('build-container') {
                     sh '''
                     cd /home/node/backstage
-                    yarn cache clean
-                    yarn install
+                    yarn install --immutable
                     yarn tsc
                     yarn build:backend
                     '''
