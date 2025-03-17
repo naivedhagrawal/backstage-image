@@ -27,8 +27,8 @@ pipeline {
             steps {
                 container('build-container') {
                     sh '''
-                    npx @backstage/create-app@latest --skip-install --path /home/node/backstage
-                    ls -lrt /home/node/
+                        echo "backstage" | npx @backstage/create-app@latest --skip-install --path /home/node/backstage
+                        ls -lrt /home/node/
                     '''
                 }
             }
