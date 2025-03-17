@@ -12,7 +12,7 @@ pipeline {
             steps {
                 container('build-container') {
                     sh '''
-                        apk add --no-cache git docker openrc make curl build-base wget
+                        apk add --no-cache git docker openrc make curl build-base wget python3 py3-pip
                         rc-update add docker boot
                         docker --version
                         npm install -g corepack
