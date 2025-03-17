@@ -2,7 +2,7 @@
 pipeline {
     agent {
         kubernetes {
-            yaml pod('build-container','node:lts-alpine')
+            yaml pod('build-container','node:20-alpine')
             showRawYaml false
         }
     }
@@ -13,11 +13,9 @@ pipeline {
                 container('build-container') {
                     sh '''
                         apk add --no-cache git
-                        if ! command -v yarn &> /dev/null; then
-                          npm install -g yarn
-                        fi
                         npm install -g corepack
                         corepack enable
+                        corepack prepare yarn@4.4.1 --activate # or any desired version
                         yarn --version
                         node -v
                     '''
