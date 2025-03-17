@@ -2,7 +2,7 @@
 pipeline {
     agent {
         kubernetes {
-            yaml pod('build-container','naivedh/alpine:latest')
+            yaml pod('build-container','naivedh/backstage-node:latest')
             showRawYaml false
         }
     }
