@@ -2,7 +2,7 @@
 pipeline {
     agent {
         kubernetes {
-            yaml pod('build-container','node:20-alpine')
+            yaml pod('build-container', 'node:20-alpine')
             showRawYaml false
         }
     }
@@ -11,35 +11,39 @@ pipeline {
         stage('Setup Environment') {
             steps {
                 container('build-container') {
-                    sh 'node -v'
-                    sh 'corepack enable yarn'
-                    sh 'yarn -v'
-                    sh 'corepack enable'
-                    sh 'yarn set version 4.4.1'
-                    sh 'yarn -v'
+                    sh '''
+                    node -v
+                    corepack enable yarn
+                    yarn -v
+                    corepack enable
+                    yarn set version 4.4.1
+                    yarn -v
+                    '''
                 }
             }
         }
+
         stage('Create Backstage App') {
             steps {
                 container('build-container') {
-                    sh 'echo "backstage" | npx @backstage/create-app@latest'
-                    sh 'pwd'
-                    sh 'ls -lrt'
-                    sh 'chown -R node:node backstage'
-                    sh 'cd backstage'
-                    sh 'ls -lrt'
+                    sh '''
+                    npx @backstage/create-app@latest --skip-install --path /home/node/backstage
+                    ls -lrt /home/node/
+                    '''
                 }
             }
         }
+
         stage('Install Dependencies') {
             steps {
                 container('build-container') {
-                    sh 'cd backstage'
-                    sh 'ls -lrt'
-                    sh 'yarn install --immutable'
-                    sh 'yarn tsc'
-                    sh 'yarn build:backend'
+                    sh '''
+                    cd /home/node/backstage
+                    yarn cache clean
+                    yarn install
+                    yarn tsc
+                    yarn build:backend
+                    '''
                 }
             }
         }
