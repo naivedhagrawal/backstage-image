@@ -40,7 +40,7 @@ pipeline {
                     sh '''
                     cd /home/node/backstage
                     rm -rf yarn.lock
-                    yarn install --immutable
+                    yarn install
                     yarn tsc
                     yarn build:backend
                     '''
