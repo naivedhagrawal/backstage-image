@@ -23,8 +23,9 @@ pipeline {
         stage('Create Backstage App') {
             steps {
                 container('build-container') {
-                    sh 'echo "backstage" | npx @backstage/create-app@latest --skip-install'
+                    sh 'echo "backstage" | npx @backstage/create-app@latest'
                     sh 'pwd'
+                    sh 'ls -lrt'
                     sh 'chown -R node:node backstage'
                     sh 'cd backstage'
                     sh 'ls -lrt'
@@ -34,8 +35,11 @@ pipeline {
         stage('Install Dependencies') {
             steps {
                 container('build-container') {
-                    sh 'yarn install'
-                    sh 'yarn dev'
+                    sh 'cd backstage'
+                    sh 'ls -lrt'
+                    sh 'yarn install --immutable'
+                    sh 'yarn tsc'
+                    sh 'yarn build:backend'
                 }
             }
         }
