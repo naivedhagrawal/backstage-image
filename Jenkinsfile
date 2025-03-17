@@ -27,14 +27,13 @@ pipeline {
                     sh '$(pwd)'
                     sh 'chown -R node:node backstage'
                     sh 'cd $(pwd)/backstage'
-                    sh 'ls -lh'
+                    sh 'ls -lrt'
                 }
             }
         }
         stage('Install Dependencies') {
             steps {
                 container('build-container') {
-                    sh 'cd $(pwd)/backstage'
                     sh 'yarn install'
                     sh 'yarn dev'
                 }
