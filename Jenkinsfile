@@ -39,7 +39,8 @@ pipeline {
                 container('build-container') {
                     sh '''
                     cd /home/node/backstage
-                    yarn install --immutable
+                    yarn install --mode update-lockfile
+                    ls -la node_modules
                     yarn tsc
                     yarn build:backend
                     '''
