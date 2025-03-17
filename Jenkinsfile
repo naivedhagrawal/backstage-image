@@ -2,7 +2,7 @@
 pipeline {
     agent {
         kubernetes {
-            yaml pod('build-container','node:lts-alpine')
+            yaml pod('build-container','node:20-alpine')
             showRawYaml false
         }
     }
