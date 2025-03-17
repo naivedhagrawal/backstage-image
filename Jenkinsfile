@@ -2,7 +2,7 @@
 pipeline {
     agent {
         kubernetes {
-            yaml pod('build-container', 'node:20-alpine')
+            yaml pod('build-container', 'node:20')
             showRawYaml false
         }
     }
@@ -14,8 +14,8 @@ pipeline {
                     sh '''
                     node -v
                     corepack enable
-                    corepack prepare yarn@stable --activate
-                    yarn set version stable
+                    corepack prepare yarn@4.4.1 --activate
+                    yarn set version 4.4.1
                     yarn -v
                     yarn config set nodeLinker node-modules
                     echo "nodeLinker: node-modules" > .yarnrc.yml
@@ -43,8 +43,8 @@ pipeline {
                     yarn cache clean
                     rm -rf .yarn node_modules yarn.lock
                     mkdir -p .yarn/releases
-                    corepack prepare yarn@stable --activate
-                    yarn set version stable
+                    corepack prepare yarn@4.4.1 --activate
+                    yarn set version 4.4.1
                     yarn -v
                     yarn install --mode update-lockfile --inline-builds
                     ls -la node_modules || echo "node_modules missing!"
